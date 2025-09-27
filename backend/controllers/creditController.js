@@ -62,7 +62,6 @@ export const purchasePlan =async(req,res)=>{
 
         const {origin} = req.headers;
         const session = await stripe.checkout.sessions.create({
-            success_url: 'https://example.com/success',
             line_items: [
                 {
                 price_data:{
