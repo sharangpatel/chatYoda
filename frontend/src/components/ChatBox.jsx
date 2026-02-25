@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import Message from "./Message";
+import toast from "react-hot-toast";
 
 const ChatBox = () => {
 
   const containerRef = useRef(null);
 
-  const {selectedChat,theme} = useAppContext()
+  const {selectedChat,theme,user,axios,token,setUser} = useAppContext()
   const [messages,setMessages] = useState([])
   const [loading,setLoading] = useState(false)
 
@@ -15,8 +16,34 @@ const ChatBox = () => {
   const [mode, setMode] = useState('text')
   const [isPublished,setIsPublished] = useState(false)
 
-  const onSubmit = (e) => {
-    e.preventDefault()
+  const onSubmit = async(e) => {
+    try {
+      e.preventDefault()
+      if(!user) return toast('Login to send message')
+        setLoading(true)
+        const promptCopy = prompt
+        setPrompt('')
+        setMessages(prev => [...prev, {role:'user', content:prompt, timestamp:Date.now(), isImage: false}])
+        const {data} = await axios.post(`/api/message/${mode}`,{chatId:selectedChat._id, prompt, isPublished}, {headers:{Authorization:token}})
+
+        if(data.success){
+          setMessages(prev => [...prev, data.reply])
+          //decrease credits
+          if(mode === 'image'){
+            setUser(prev => ({...prev, credits: prev.credits - 2}))
+          }else{
+            setUser(prev => ({...prev, credits: prev.credits - 1}))
+          }
+        }else{
+          toast.error(data.message)
+          setPrompt(promptCopy)
+        }
+    } catch (error) {
+      toast.error(error.message)
+    }finally{
+      setPrompt('')
+      setLoading(false)
+    }
   }
 
   useEffect(()=>{
@@ -40,7 +67,7 @@ const ChatBox = () => {
     <div ref={containerRef} className="flex-1 mb-5 overflow-y-scroll">
       {messages.length === 0 && (
       <div className="h-full flex flex-col items-center justify-center gap-2 text-primary"> 
-        <img src={theme=== 'dark'?assets.logo_full : assets.logo_full_dark}/>
+        <img src={theme=== 'dark'?assets.chatYoda1 : assets.chatYoda1}/>
         <p className="mt-5 text-3xl sm:text-5xl text-center text-gray-500 dark:text-white">Ask me anything!</p>
       </div> 
       )}
@@ -82,3 +109,4 @@ const ChatBox = () => {
 };
 
 export default ChatBox;
+

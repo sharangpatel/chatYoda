@@ -1,3 +1,4 @@
+import chatYoda1 from "./chatYoda1.png"
 import logo from "./logo.svg";
 import logo_full from "./logo_full.svg";
 import logo_full_dark from "./logo_full_dark.svg";
@@ -42,7 +43,8 @@ export const assets = {
     logout_icon,
     logo_full_dark,
     diamond_icon,
-    gallery_icon
+    gallery_icon,
+    chatYoda1
 };
 
 export const dummyUserData = {
