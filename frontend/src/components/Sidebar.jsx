@@ -97,8 +97,8 @@ const Sidebar = ({isMenuOpen,setIsMenuOpen}) => {
       </label>
     </div>
 
-    {/* User acoount */}
-    <div onClick={()=>navigate('/community')} className="flex items-center justify-center gap-3 p-3 mt-4 border border-gray-500 dark:border-white/15 rounded-md cursor-pointer group">
+    {/* User account */}
+    <div className="flex items-center justify-center gap-3 p-3 mt-4 border border-gray-500 dark:border-white/15 rounded-md cursor-pointer group">
       <img src={assets.user_icon} className="w-7 rounded-full" alt="" />
       <p className="flex-1 text-sm dark:text-primary truncate">{user ? user.name : 'Login your account'}</p>
       {user && <img onClick={logout} src={assets.logout_icon} className="h-5 cursor-pointer not-dark:invert group-hover:block"/>}
